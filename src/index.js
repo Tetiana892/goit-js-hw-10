@@ -40,19 +40,18 @@ function renderCountryList(country) {
   const markup = country
     .map(country => {
       return `<li>
-      <img src="${country.flags.svg}" alt="Flag of ${country.name.official}" width="30" hight="20">
+      <img src="${country.flags.svg}" alt="Flag of ${country.name.official}" width="60" hight="30">
          <h2>${country.name.official}</h2>
                 </li>`;
     })
     .join('');
   listEl.innerHTML = markup;
-  listEl.li.style.textDecoration = 'none';
 }
 
 function renderOneCountry(country) {
   const markup = country
     .map(country => {
-      return `<li>
+      return `<li >
       <img src="${country.flags.svg}" alt="Flag of ${
         country.name.official
       }" width="30" hight="20">
@@ -65,9 +64,11 @@ function renderOneCountry(country) {
     .join('');
   listEl.innerHTML = markup;
 }
+
 function showError() {
   Notiflix.Notify.failure('Oops, there is no country with that name');
 }
+
 function cleanHtml() {
   listEl.innerHTML = '';
   infoEl.innerHTML = '';
