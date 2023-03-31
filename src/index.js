@@ -8,14 +8,14 @@ const listEl = document.querySelector('.country-list');
 const infoEl = document.querySelector('.country-info');
 const DEBOUNCE_DELAY = 300;
 
-inputEl.addEventListener('input', debounce(inputCountry, DEBOUNCE_DELAY));
-
-function inputCountry(e) {
-  const name = inputEl.value.trim();
-
-  fetchCountries(name).then(renderInfoCountry).catch(showError);
-  cleanHtml();
-}
+inputEl.addEventListener(
+  'input',
+  debounce(() => {
+    fetchCountries(inputEl.value).then(renderInfoCountry).catch(showError);
+    cleanHtml();
+  }),
+  DEBOUNCE_DELAY
+);
 
 function renderInfoCountry() {
   const name = inputEl.value.trim();
