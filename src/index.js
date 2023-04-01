@@ -12,7 +12,7 @@ inputEl.addEventListener('input', debounce(renderInfoCountry, DEBOUNCE_DELAY));
 
 function renderInfoCountry(e) {
   e.preventDefault();
-  const inputValue = e.target.value.trim();
+  const inputValue = inputEl.value.trim();
   if (!inputValue) {
     cleanHtml();
     return;
@@ -54,12 +54,13 @@ function renderCountry(country) {
     Notiflix.Notify.info(
       'Too many matches found. Please enter a more specific name.'
     );
+  } else if (foundData.length === 0) {
+    Notiflix.Notify.failure('Oops, there is no country with that name');
   } else if (country.length >= 2 && country.length <= 10) {
     renderCountryList(country);
-  } else {
+  } else if (country.length === 1) {
     renderOneCountry(country);
   }
-  return;
 }
 
 function showError() {
