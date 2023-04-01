@@ -3,37 +3,21 @@ import debounce from 'lodash.debounce';
 import { fetchCountries } from './js/fetchCountries';
 import Notiflix from 'notiflix';
 
+const DEBOUNCE_DELAY = 300;
 const inputEl = document.querySelector('#search-box');
 const listEl = document.querySelector('.country-list');
 const infoEl = document.querySelector('.country-info');
-const DEBOUNCE_DELAY = 300;
 
-inputEl.addEventListener(
-  'input',
-  debounce(() => {
-    fetchCountries(inputEl.value).then(renderInfoCountry).catch(showError);
+inputEl.addEventListener('input', debounce(renderInfoCountry, DEBOUNCE_DELAY));
+
+function renderInfoCountry(e) {
+  e.preventDefault();
+  const inputValue = e.target.value.trim();
+  if (!inputValue) {
     cleanHtml();
-  }),
-  DEBOUNCE_DELAY
-);
-
-function renderInfoCountry() {
-  const name = inputEl.value.trim();
-  if (name !== '') {
-    fetchCountries(name).then(name => {
-      if (name.length > 10) {
-        Notiflix.Notify.info(
-          'Too many matches found. Please enter a more specific name.'
-        );
-      } else if (name.length === 0) {
-        Notiflix.Notify.failure('Oops, there is no country with that name');
-      } else if (name.length >= 2 && name.length <= 10) {
-        renderCountryList(name);
-      } else if (name.length === 1) {
-        renderOneCountry(name);
-      }
-    });
+    return;
   }
+  fetchCountries(inputValue).then(renderCountry).catch(showError);
 }
 
 function renderCountryList(country) {
@@ -45,7 +29,7 @@ function renderCountryList(country) {
                 </li>`;
     })
     .join('');
-  listEl.innerHTML = markup;
+  return listEl.insertAdjacentHTML('beforeend', markup);
 }
 
 function renderOneCountry(country) {
@@ -62,10 +46,27 @@ function renderOneCountry(country) {
                 </li>`;
     })
     .join('');
-  listEl.innerHTML = markup;
+  return listEl.insertAdjacentHTML('beforeend', markup);
+}
+
+function renderCountry(country) {
+  if (country.length > 10) {
+    Notiflix.Notify.info(
+      'Too many matches found. Please enter a more specific name.'
+    );
+  } else if (country.length >= 2 && country.length <= 10) {
+    listEl.innerHTML = '';
+    renderCountryList(country);
+    infoEl.innerHTML = '';
+  } else {
+    infoEl.innerHTML = '';
+    renderOneCountry(country);
+    listEl.innerHTML = '';
+  }
 }
 
 function showError() {
+  cleanHtml();
   Notiflix.Notify.failure('Oops, there is no country with that name');
 }
 
