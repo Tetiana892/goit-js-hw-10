@@ -55,14 +55,11 @@ function renderCountry(country) {
       'Too many matches found. Please enter a more specific name.'
     );
   } else if (country.length >= 2 && country.length <= 10) {
-    listEl.innerHTML = '';
     renderCountryList(country);
-    infoEl.innerHTML = '';
   } else {
-    infoEl.innerHTML = '';
     renderOneCountry(country);
-    listEl.innerHTML = '';
   }
+  return;
 }
 
 function showError() {
